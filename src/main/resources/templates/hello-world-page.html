@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/webjars/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+
+<h1>My books</h1>
+
+<p th:text="${sample}" style="color:red; font-style: italic;">Sample</p>
+
+<p><a href="http://localhost:8080/data/some-data">Link to some GET REST API data</a></p>
+
+<p>
+<input id="search" type="text" />
+<button id="search-btn" onclick="searchForInput()">Search! (does a POST)</button>
+</p>
+
+<p id="search-results"></p>
+
+<script type="application/javascript">
+    function searchForInput() {
+        const stringToSearch = $("#search").val();
+
+        $.ajax({
+            type: "POST",
+            url: "data/some-kind-of-search",
+            data: JSON.stringify({ searchText: stringToSearch }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(listOfResults){
+                //render the response here, maybe create some elements or something
+                const searchResults = $("#search-results");
+                let someText = "";
+                for(let result of listOfResults) {
+                    someText += result.title + " by " + result.author + ", ";
+                }
+                searchResults.text(someText);
+            },
+            error: function(errMsg) {
+                alert(errMsg);
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
